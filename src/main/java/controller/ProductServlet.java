@@ -19,12 +19,19 @@ public class ProductServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String search = req.getParameter("search");
         List<Product> products;
+
         if (search != null && !search.isEmpty()) {
-            products = productRepository.searchProducts(search);
+            try {
+                double price = Double.parseDouble(search);
+                products = productRepository.searchProductsByPrice(price);
+            } catch (NumberFormatException e) {
+                products = productRepository.searchProductsByName(search);
+            }
         } else {
             products = productRepository.getAllProducts();
         }
+
         req.setAttribute("products", products);
         req.getRequestDispatcher("product_list.jsp").forward(req, resp);
-    }
+}
 }

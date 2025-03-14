@@ -60,7 +60,7 @@
 <body>
 <div class="container">
     <h2>Thêm Sản Phẩm</h2>
-    <form action="add-product" method="post">
+    <form action="${pageContext.request.contextPath}/add-product" method="post">
         <label>Tên sản phẩm:</label>
         <input type="text" name="name" required>
 

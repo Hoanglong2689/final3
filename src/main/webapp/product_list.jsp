@@ -1,7 +1,8 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+`<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.List, model.Product" %>
 <jsp:useBean id="products" scope="request" type="java.util.List<model.Product>" />
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <html>
 <head>
     <title>Quản Lý Sản Phẩm</title>
@@ -119,9 +120,9 @@
         if (products != null && !products.isEmpty()) {
             for (Product p : products) {
     %>
-    <tr>
+    <tr id="product-<%= p.getId() %>">
         <td><%= p.getName() %></td>
-        <td><%= p.getPrice() %></td>
+        <td><fmt:formatNumber value="${p.price}" type="number" pattern="###,###" /></td>
         <td><%= p.getQuantity() %></td>
         <td><%= p.getColor() %></td>
         <td><%= p.getDescription() %></td>
@@ -142,5 +143,26 @@
         }
     %>
 </table>
+<script>
+    function confirmDelete(id) {
+        if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?")) {
+            fetch('delete-product', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'id=' + id
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Xóa sản phẩm thành công!");
+                        location.reload(); // Tải lại trang để cập nhật danh sách
+                    } else {
+                        alert("Xóa sản phẩm thất bại!");
+                    }
+                })
+                .catch(error => console.error("Lỗi khi xóa sản phẩm:", error));
+        }
+    }
+</script>
 </body>
-</html>
+</html>`
